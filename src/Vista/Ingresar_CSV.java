@@ -7,6 +7,7 @@ package Vista;
 
 import funcion.ContenidoCSV;
 import funcion.CustomCellRenderer;
+import funcion.ExportCsv;
 import funcion.GenerarDatos;
 import funcion.GraficaSimulacion;
 import funcion.GraficaSimulacionTn;
@@ -15,6 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
@@ -28,8 +31,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Ingresar_CSV extends javax.swing.JFrame {
 private String nombreArchivo="Plantilla/Plantilla.csv";
- ContenidoCSV contenidoCSV;
-    
+ContenidoCSV contenidoCSV;
+GraficaSimulacion graficar = new GraficaSimulacion();
+
+
 public Ingresar_CSV() {
     initComponents();
     
@@ -83,6 +88,7 @@ public Ingresar_CSV() {
 
     JScrollBar horizontalScrollBar = jScrollPane1.getHorizontalScrollBar();
     horizontalScrollBar.setUI(new Principal2.CustomScrollBarUI());
+    
 }
 
   
@@ -129,6 +135,7 @@ public Ingresar_CSV() {
         jLabel19 = new javax.swing.JLabel();
         btnSeleccionar2 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
+        btnImprimir = new javax.swing.JToggleButton();
 
         jPanel6.setBackground(new java.awt.Color(0, 38, 79));
         jPanel6.setForeground(new java.awt.Color(0, 38, 79));
@@ -159,7 +166,11 @@ public Ingresar_CSV() {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(942, 1725));
+
         Panel1.setBackground(new java.awt.Color(255, 255, 255));
+        Panel1.setMinimumSize(new java.awt.Dimension(940, 1755));
+        Panel1.setPreferredSize(new java.awt.Dimension(940, 1755));
         Panel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -291,6 +302,10 @@ public Ingresar_CSV() {
 
         jPanel15.setBackground(new java.awt.Color(153, 153, 153));
         jPanel15.setForeground(new java.awt.Color(0, 52, 107));
+        jPanel15.setPreferredSize(new java.awt.Dimension(770, 390));
+
+        jPanel16.setMinimumSize(new java.awt.Dimension(10, 10));
+        jPanel16.setPreferredSize(new java.awt.Dimension(10, 10));
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -307,20 +322,20 @@ public Ingresar_CSV() {
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
-                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 710, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        Panel1.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 1290, 770, 400));
+        Panel1.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 1290, 770, 390));
 
         jPanel17.setBackground(new java.awt.Color(153, 153, 153));
         jPanel17.setForeground(new java.awt.Color(0, 98, 107));
@@ -496,9 +511,18 @@ public Ingresar_CSV() {
 
         Panel1.add(btnSeleccionar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 480, 130, -1));
 
+        btnImprimir.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnImprimir.setText("Descargar");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+        Panel1.add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 1700, 100, 40));
+
         jScrollPane1.setViewportView(Panel1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 570));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 960, 570));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -507,9 +531,9 @@ public Ingresar_CSV() {
        
         
          String mensaje = "<html><body><p style='width: 250px;'>⚠️ <b>¿Está seguro de que quiere salir?</b><br><br>"
-                   + "Si sale ahora, <i>sus gráficos cuidadosamente generados</i> desaparecerán "
-                   + "y no podrán recuperarse. ¡Piensa en todo el trabajo que pusiste en ellos!<br><br>"
-                   + "¿Realmente quieres arriesgarte a perderlos?</p></body></html>";
+                   + "Si sale ahora, <i>sus gráficos generados</i> desaparecerán "
+                   + "y no podrán recuperarse. <br><br>"
+                   + "¿Estas seguro(a) de salirte?</p></body></html>";
 
     // Muestra el JOptionPane con opciones
     int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Confirmación de salida",
@@ -536,12 +560,12 @@ public Ingresar_CSV() {
         GenerarDatos.generarMasDatos(JTableCSV, cantidadDeFilas);
 
         // Aplica el renderizador personalizado, pasando la cantidad de filas originales
-        JTableCSV.setDefaultRenderer(Object.class, new CustomCellRenderer(GenerarDatos.filasOriginales));    // TODO add your handling code here:
+        JTableCSV.setDefaultRenderer(Object.class, new CustomCellRenderer(GenerarDatos.filasOriginales));  
         calcularValores(); 
         
-        GraficaSimulacion.graficarDesdeTabla(JTableCSV, jPanel8);  // TODO add your handling code here:
-        GraficaSimulacionTn.graficarTasasDeNatalidad(JTableCSV, jPanel16); 
-        
+        graficar.graficarEspVida(JTableCSV, jPanel8);  // TODO add your handling code here:
+        graficar.graficarTasasDeNatalidad(JTableCSV, jPanel16);
+       
        
     }//GEN-LAST:event_btnSeleccionar1MouseClicked
 
@@ -561,8 +585,19 @@ public Ingresar_CSV() {
     }//GEN-LAST:event_añosSliderStateChanged
 
     private void btnSeleccionar2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSeleccionar2MouseClicked
-        // TODO add your handling code here:
+    try {
+        ExportCsv exportar = new ExportCsv(JTableCSV);
+       
+    } catch (IOException ex) {
+        Logger.getLogger(Ingresar_CSV.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }//GEN-LAST:event_btnSeleccionar2MouseClicked
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        graficar.imprimir();
+       
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     
     public static void main(String args[]) {
@@ -602,6 +637,7 @@ public Ingresar_CSV() {
     private javax.swing.JTable JTableCSV;
     private javax.swing.JPanel Panel1;
     private javax.swing.JSlider añosSlider;
+    private javax.swing.JToggleButton btnImprimir;
     private javax.swing.JPanel btnSeleccionar;
     private javax.swing.JPanel btnSeleccionar1;
     private javax.swing.JPanel btnSeleccionar2;
@@ -701,5 +737,4 @@ private void calcularValores() {
         datoslbl.setText("Error en el cálculo: " + ex.getMessage());
     }
 }
-
 }
