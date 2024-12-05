@@ -142,6 +142,10 @@ ChartPanel chartPanel2;
     
     public void imprimir(){
         chartPanel.createChartPrintJob();
+   
+    }
+    
+     public void imprimir2(){
         chartPanel2.createChartPrintJob();
     }
     
